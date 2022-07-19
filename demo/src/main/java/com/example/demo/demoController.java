@@ -71,7 +71,7 @@ public class demoController {
 	
 	//Http methods-> GET, post, put, patch, delete
 	
-	@GetMapping("/registerUser")
+	@PostMapping("/registerUser")
 	public String regisspostuser(@RequestBody User temp) {
 		database.add(temp);
 		return "POST USER ADDED SUCCESSFULLY";

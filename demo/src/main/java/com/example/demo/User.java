@@ -1,5 +1,5 @@
 package com.example.demo;
-
+// Object -> toString()
 public class User {
 	
 	private String name;
@@ -39,11 +39,9 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", email=" + email + ", password=" + password + ", age=" + age + ", gender="
+		return "HELLO WORLD [name=" + name + ", email=" + email + ", password=" + password + ", age=" + age + ", gender="
 				+ gender + "]";
-	}	
-	
-	
+	}
 	
 	
 }

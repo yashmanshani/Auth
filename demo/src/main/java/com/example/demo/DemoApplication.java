@@ -15,15 +15,15 @@ public class DemoApplication {
 	}
 
 }
-// component are classes whose object are to be automatically made
+// component are classes whose object are to be automatically created by spring boot and put into the containers
 // this file scans for the components and add them to the containers
 
 // Component types -> controller, service, repository
  	// controller -> handles all the endpoints
-	//  ^
+	//  | ^
 	// service -> business logic
-	//	^
-	// repository -> is used to handle database operations
+	//	| ^
+	// repository/DAO(data access object) -> is used to handle database operations
 
 // demoController, DemoRepository -> automatically object created and put into container
 // beans means object

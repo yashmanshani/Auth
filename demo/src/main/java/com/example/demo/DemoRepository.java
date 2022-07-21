@@ -16,18 +16,19 @@ public class DemoRepository {
 		database.add(user);
 		return "User Added to database";
 	}
+	
 	public boolean valid(String email,String pass) {
-	for (int i=0; i<database.size(); i++) {
-		User s = database.get(i);
-		if(s.getEmail().equals(email)) {
-			if(s.getPassword().equals(pass)) {
-				return true;
-			}
-			else {
-				return false;
+		for (int i=0; i<database.size(); i++) {
+			User s = database.get(i);
+			if(s.getEmail().equals(email)) {
+				if(s.getPassword().equals(pass)) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 		}
-	}
 		return false;
 	}
 	
@@ -39,7 +40,6 @@ public class DemoRepository {
 				return s;
 			}
 		}
-		
 		return null;
 	}
 	
@@ -51,6 +51,21 @@ public class DemoRepository {
 	
 	// update 
 	// write a function to update user
+	public String updateUser(User user) {
+		String email = user.getEmail();
+		for (int i=0; i<database.size(); i++) {
+			User s = database.get(i);
+			if (email.equals(s.getEmail())) { //user found
+				s.setAge(user.getAge());
+				s.setGender(user.getGender());
+				s.setPassword(user.getPassword());
+				return "User updated successfully";
+			}
+		}
+		return "User not found by Email "+email;
+		
+	}
+	
 	
 	// delete
 	public String deleteuser(String email) {

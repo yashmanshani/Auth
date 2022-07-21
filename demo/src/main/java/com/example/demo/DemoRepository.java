@@ -16,15 +16,30 @@ public class DemoRepository {
 		database.add(user);
 		return "User Added to database";
 	}
+	public boolean valid(String email,String pass) {
+	for (int i=0; i<database.size(); i++) {
+		User s = database.get(i);
+		if(s.getEmail().equals(email)) {
+			if(s.getPassword().equals(pass)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+		return false;
+	}
 	
 	// read
 	public User getUser(String email) {
 		for (int i=0; i<database.size(); i++) {
-			User temp = database.get(i);
-			if(temp.getEmail().equals(email)) {
-				return temp;
+			User s = database.get(i);
+			if(s.getEmail().equals(email)) {
+				return s;
 			}
 		}
+		
 		return null;
 	}
 	

@@ -1,9 +1,9 @@
-package com.example.demo;
+package com.example.demo.DTO;
 
 public class Demo {
 
 	public static void main(String[] args) {
-		User u = new User();
+		Student u = new Student();
 		u.setName("utkarsh");
 		u.setEmail("uta@jbdfjds.com");
 		u.setGender("male");

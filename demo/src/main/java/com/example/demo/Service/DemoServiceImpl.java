@@ -1,17 +1,22 @@
-package com.example.demo;
+package com.example.demo.Service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class DemoServiceImpl {
+import com.example.demo.DTO.LoginCredentialDTO;
+import com.example.demo.DTO.Student;
+import com.example.demo.Repository.DemoRepository;
+
+@Service("ListService")
+public class DemoServiceImpl implements DemoService{
 	
 	@Autowired
 	DemoRepository repo;
 	
-	public String isUserValid(LoginCredentialDTO creds) {
+	@Override
+	public String isStudentValid(LoginCredentialDTO creds) {
 		if (repo.valid(creds.getEmail(), creds.getPassword()) == true) {
 			return "YES VALID USER";
 		}
@@ -20,15 +25,17 @@ public class DemoServiceImpl {
 		}
 	}
 	
+	@Override
 	public int addition(int a, int b) {
 		int sum = a+b;
 		return sum;
 	}
 	
-	public String registerPostUser(User temp) {
+	@Override
+	public String registerPostStudent(Student temp) {
 		// check if email is unique
 		String email = temp.getEmail();
-		User u = repo.getUser(email);
+		Student u = repo.getStudent(email);
 		if(u == null) { 
 			// we can register new user
 			return repo.adduser(temp);
@@ -37,34 +44,31 @@ public class DemoServiceImpl {
 			return "Email Id already registered";
 		}
 	}
-	
-	public String updateUser(User user) {
-		return repo.updateUser(user);
+	@Override
+	public String updateStudent(Student user) {
+		return repo.updateStudent(user);
 	}
-
-	public List<User> getalluser() {
+	@Override
+	public List<Student> getalluser() {
 		return repo.getalluser();
 	}
-
-	public User getUser(String e) {
-		return repo.getUser(e);
+	@Override
+	public Student getStudent(String e) {
+		return repo.getStudent(e);
 	}
-
+	@Override
 	public String deleteuser(String e) {
 		return repo.deleteuser(e);
 	}
-
-	public String addGetUser(String n, String e, String p, String g, int a) {
-		User object = new User();
+	@Override
+	public String addGetStudent(String n, String e, String p, String g, int a) {
+		Student object = new Student();
 		object.setName(n);
 		object.setEmail(e);
 		object.setPassword(p);
 		object.setGender(g);
 		object.setAge(a);
-		return registerPostUser(object);
+		return registerPostStudent(object);
 	}
-	
-	
-	
 
 }

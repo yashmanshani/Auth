@@ -1,25 +1,27 @@
-package com.example.demo;
+package com.example.demo.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.DTO.Student;
+
 @Repository
 public class DemoRepository {
 	
-	List<User> database = new ArrayList<>();
+	List<Student> database = new ArrayList<>();
 	// CRUD
 	
 	// create/add
-	public String adduser(User user) {
+	public String adduser(Student user) {
 		database.add(user);
-		return "User Added to database";
+		return "Student Added to database";
 	}
 	
 	public boolean valid(String email,String pass) {
 		for (int i=0; i<database.size(); i++) {
-			User s = database.get(i);
+			Student s = database.get(i);
 			if(s.getEmail().equals(email)) {
 				if(s.getPassword().equals(pass)) {
 					return true;
@@ -33,9 +35,9 @@ public class DemoRepository {
 	}
 	
 	// read
-	public User getUser(String email) {
+	public Student getStudent(String email) {
 		for (int i=0; i<database.size(); i++) {
-			User s = database.get(i);
+			Student s = database.get(i);
 			if(s.getEmail().equals(email)) {
 				return s;
 			}
@@ -44,25 +46,25 @@ public class DemoRepository {
 	}
 	
 	//readalldata 
-	public List<User> getalluser(){
+	public List<Student> getalluser(){
 		
 		return database;
 	}
 	
 	// update 
 	// write a function to update user
-	public String updateUser(User user) {
+	public String updateStudent(Student user) {
 		String email = user.getEmail();
 		for (int i=0; i<database.size(); i++) {
-			User s = database.get(i);
+			Student s = database.get(i);
 			if (email.equals(s.getEmail())) { //user found
 				s.setAge(user.getAge());
 				s.setGender(user.getGender());
 				s.setPassword(user.getPassword());
-				return "User updated successfully";
+				return "Student updated successfully";
 			}
 		}
-		return "User not found by Email "+email;
+		return "Student not found by Email "+email;
 		
 	}
 	
@@ -70,13 +72,13 @@ public class DemoRepository {
 	// delete
 	public String deleteuser(String email) {
 		for (int i=0; i<database.size(); i++) {
-			User temp = database.get(i);
+			Student temp = database.get(i);
 			if(temp.getEmail().equals(email)) {
 				database.remove(i);
-				return "User deleted successfully";
+				return "Student deleted successfully";
 			}
 		}
-		return "ERROR: User with email:" + email + "not found";
+		return "ERROR: Student with email:" + email + "not found";
 	}
 	
 }

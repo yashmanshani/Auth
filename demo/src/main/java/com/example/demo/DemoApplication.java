@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 // main file
-// default config are applied to the project automatically
+// default config are applied to the project automatically/ reads config data from application file
 // component scanning
 public class DemoApplication {
 
@@ -29,3 +29,8 @@ public class DemoApplication {
 // beans means object
 // A - B - C
 // GRACEFULLY FAIL
+
+// ORM -> Object-Relation mapping -> Hibernate, jOOQ.
+// JDBC -> Java DataBase Connection  (Java <-> ORM <-> JDBC(SQL) <-> Database)
+
+// SQL -> postgresSQL, mysql, sql-lite, (H2..)

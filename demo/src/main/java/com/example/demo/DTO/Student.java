@@ -1,12 +1,28 @@
-package com.example.demo;
-// Object -> toString()
-public class User {
+package com.example.demo.DTO;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+public class Student {
 	
-	private String name;
+	@Id // Primary key
 	private String email;
+	
+	@Column
+	private String name;
+	
+	@Column
 	private String password;
+	
+	@Column
 	private int age;
+	
+	@Column
 	private String gender;
+	
+	
 	public String getName() {
 		return name;
 	}

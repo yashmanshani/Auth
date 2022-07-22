@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.DTO;
 
 public class LoginCredentialDTO {
 	private String email;

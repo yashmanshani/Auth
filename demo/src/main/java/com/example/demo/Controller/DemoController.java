@@ -45,9 +45,10 @@ public class DemoController {
 		return service.isStudentValid(creds);
 	}
 	
-	//@RequestParam - > http://localhost:8080/add?a=15&b=16
+	//@ReequestParam - > http://localhost:8080/add?a=15&b=16
 	@GetMapping("/add")
 	public int addNumber(@RequestParam(name = "a") int a, @RequestParam(name = "b") int b) {
+		// error
 		return service.addition(a, b);
 	}
 	
@@ -56,6 +57,7 @@ public class DemoController {
 	public int addNumbersPath(@PathVariable(name="a") int a,@PathVariable(name = "b") int b) {
 		return service.addition(a, b);
 	}
+	
 	
 	//update
 	@PutMapping("/update")
@@ -91,3 +93,8 @@ public class DemoController {
 		return service.deleteuser(e);
 	}
 }
+
+// monolith apps -> 
+// micro service -> single resp
+
+// 

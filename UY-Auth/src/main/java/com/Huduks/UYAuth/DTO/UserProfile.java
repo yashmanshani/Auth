@@ -14,7 +14,7 @@ public class UserProfile {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long userId;
+	private Long userId;
 	
 	@Column
 	private String name;
@@ -26,7 +26,7 @@ public class UserProfile {
 	private String password;
 	
 	@Column
-	private boolean verified=true;
+	private boolean verified=false;
 
 	@Column
 	private String salt;
@@ -41,7 +41,7 @@ public class UserProfile {
 	}
 
 	
-	public long getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
@@ -53,7 +53,7 @@ public class UserProfile {
 		this.verified = verified;
 	}
 
-	public void setUserId(long userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 

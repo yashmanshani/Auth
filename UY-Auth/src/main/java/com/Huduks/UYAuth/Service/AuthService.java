@@ -10,7 +10,7 @@ public interface AuthService {
 	public String addUser(UserProfile user);
 	public String updateUser(UserProfile user); //password
 	public boolean authenticateUser(LoginCreds creds); // take hashed password
-	public String changePassword(UserProfile user);
+	public String changePasswordInDatabase(String email, String password);
 	public List<UserProfile> getAllUser();
-	
+	public String forgotPassword(String email);
 }

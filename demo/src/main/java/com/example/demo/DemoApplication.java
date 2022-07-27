@@ -59,3 +59,35 @@ public class DemoApplication {
 
 
 
+// GIVE MIKE 2500 ruppeess = > dfsgfhehheojgbrgjwfiohfijbjewtgh #For data integrity
+
+// session H2 database => session id, valid thru, email
+
+// {session id=11464, valid thru=12/15/2022, email=utalmign@hacm.com} => hash => nsdogdg64gw49rergesheheprkghewpmwew12ew4gwgoghogn
+// secret key =>gonsgojdfbgiefbghiefhefijo
+// {session id=11464, valid thru=12/15/2022, email=utalmign@hacm.com} => encode 
+// base64-> dfgiwnnwowv5615srgergihbwonwosaggdsgshdfhjd   hdfbsdfibdsgonsgojdfbgiefbghiefhefijo => {session id=11464, valid thru=12/15/2030, email=utalmign@hacm.com}
+// hash-> hash(dfgiwnnwowv564v5+rgergihbwonwobsdfibds)=>dsbfgsijgbdwigbdiwfbewofheww6wgrwgknbw
+
+//dfgiwnnwowv1564v5+rgergihbwonwobsdfibds.dsbfgsijgbdwigbdiwfbewofheww6wgrwgknbw
+//dfgiwnnwowv5615srgergihbwonwosaggdsgshdfhjdhdfbsdfibds.dufghdsvifgbdwgkfbwiofgbewifgbwoigbdwg
+
+// JWT -> JSON Web token -> clone
+// header = {}
+// payload = {session id=11464, valid thru=12/15/2022, email=utalmighty@hacm.com} 
+// base64 => sadfjhfwbigbeijbvejbnefonefobndefiobjndefkefdkbjve
+// secret key => djgbdwgijobeijvvnsdgkjb
+// hash = (base64+secretkey) =>fahfbkjbkbqwff65ewfewfjnbewfijnwfogh387ref 
+// base64.hash => sadfjhfwbigbeijbvejbnefonefobndefiobjndefkefdkbjve.fahfbkjbkbqwff65ewfewfjnbewfijnwfogh387ref
+
+// client side - {session id=11464, valid thru=12/15/2032, email=utalmighty@hacm.com}
+// base64 - dgkngpsnmgsg25sggljrgr6gerwg6
+// gussedsectre key - gwgjgbksbgs
+// SHA256 - hash(base64+guessedsecretkey) -> hfhbvdsvdsvbdibdsfjbvdsfkhbdvaffhfhabvfav
+// dgkngpsnmgsg25sggljrgr6gerwg6.hfhbvdsvdsvbdibdsfjbvdsfkhbdvaffhfhabvfav
+
+// {session id=11464, valid thru=12/15/2032, email=utalmighty@hacm.com} 
+// encode64 = dgkngpsnmgsg25sggljrgr6gerwg6
+// hash(encode64+secretkey) => fmnbgdsbgiwbgiwbgeiwgbdwigbwifgjbewifgbewiogb
+
+

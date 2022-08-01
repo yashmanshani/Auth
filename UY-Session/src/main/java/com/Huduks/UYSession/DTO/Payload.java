@@ -5,6 +5,7 @@ public class Payload {
 	private String email;
 	private Long validThru;
 	private String deviceId;
+	private Long issuedOn;
 	
 	public String getEmail() {
 		return email;
@@ -14,6 +15,12 @@ public class Payload {
 	}
 	public Long getValidThru() {
 		return validThru;
+	}
+	public Long getIssuedOn() {
+		return issuedOn;
+	}
+	public void setIssuedOn(Long issuedOn) {
+		this.issuedOn = issuedOn;
 	}
 	public void setValidThru(Long validThru) {
 		this.validThru = validThru;
@@ -27,7 +34,7 @@ public class Payload {
 	
 	@Override
 	public String toString() {
-		return "{\"email\":" + email + ", \"validThru\":" + validThru + ", \"deviceId\":" + deviceId + "}";
+		return "{\"email\":" + "\"" +email +"\""+ ", \"issuedOn\":" + issuedOn + ", \"validThru\":" + validThru + ", \"deviceId\":" + "\"" +deviceId + "\"" + "}";
 	}
 	
 	

@@ -59,7 +59,7 @@ public class DemoApplication {
 
 
 
-// GIVE MIKE 2500 ruppeess = > dfsgfhehheojgbrgjwfiohfijbjewtgh #For data integrity
+// GIVE MIKE 2500 rupees = > dfsgfhehheojgbrgjwfiohfijbjewtgh #For data integrity
 
 // session H2 database => session id, valid thru, email
 
@@ -89,5 +89,16 @@ public class DemoApplication {
 // {session id=11464, valid thru=12/15/2032, email=utalmighty@hacm.com} 
 // encode64 = dgkngpsnmgsg25sggljrgr6gerwg6
 // hash(encode64+secretkey) => fmnbgdsbgiwbgiwbgeiwgbdwigbwifgjbewifgbewiogb
+
+// APPLICATION FLOW
+// create- email, name ,password <verify>
+// login - email/pass, session
+// update basic info -> session through
+// change password -> session through
+// forgot password -> email through
+
+// RestTemplate -> to make rest calls on other services.
+
+
 
 

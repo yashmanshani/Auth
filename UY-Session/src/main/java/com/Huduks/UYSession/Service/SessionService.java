@@ -1,6 +1,6 @@
 package com.Huduks.UYSession.Service;
 
-import com.Huduks.UYSession.NewSession;
+import com.Huduks.UYSession.DTO.NewSession;
 
 public interface SessionService {
 

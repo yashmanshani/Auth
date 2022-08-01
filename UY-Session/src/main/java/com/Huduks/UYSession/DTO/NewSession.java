@@ -1,4 +1,4 @@
-package com.Huduks.UYSession;
+package com.Huduks.UYSession.DTO;
 
 public class NewSession {
 	private String email;

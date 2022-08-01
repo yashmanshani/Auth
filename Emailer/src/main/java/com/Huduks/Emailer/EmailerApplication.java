@@ -1,14 +1,13 @@
-package com.Huduks.UYSession;
+package com.Huduks.Emailer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UySessionApplication {
+public class EmailerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UySessionApplication.class, args);
+		SpringApplication.run(EmailerApplication.class, args);
 	}
 
 }
-

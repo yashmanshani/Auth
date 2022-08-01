@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.Huduks.UYSession.NewSession;
 import com.Huduks.UYSession.DTO.Header;
+import com.Huduks.UYSession.DTO.NewSession;
 import com.Huduks.UYSession.DTO.Payload;
 import com.Huduks.UYSession.Utility.HashUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,8 +34,12 @@ public class SessionServiceImpl implements SessionService{
 		
 		LocalDate current = LocalDate.now();
 		LocalDate next = current.plusDays(days);
+		
+		long nowEpoch = current.toEpochDay();
 		long epoch = next.toEpochDay();
-		payload.setValidThru(epoch);
+		
+		payload.setIssuedOn(nowEpoch);
+		payload.setValidThru(epoch); 
 		
 		String token = util.getToken(header.toString(), payload.toString());
 		return token;
@@ -50,6 +54,7 @@ public class SessionServiceImpl implements SessionService{
 			LocalDate current = LocalDate.now();
 			ObjectMapper mapper = new ObjectMapper();
 			try {
+				// Maps a JSON string to Object
 				Payload obj = mapper.readValue(payload, Payload.class);
 				long epoch = obj.getValidThru();
 				if(LocalDate.ofEpochDay(epoch).isAfter(current)) {

@@ -14,7 +14,7 @@ public class Header {
 
 	@Override
 	public String toString() {
-		return "{\"name\": " + name + "}";
+		return "{\"name\": " + "\""+name+ "\""+ "}";
 	}
 	
 	

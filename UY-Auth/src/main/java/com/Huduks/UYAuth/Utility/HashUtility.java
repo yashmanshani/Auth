@@ -1,4 +1,4 @@
-package com.Huduks.UYSession.Utility;
+package com.Huduks.UYAuth.Utility;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,5 +51,14 @@ public class AuthController {
 		return "Invalid Credentials";
 	}
 	
+	@GetMapping("/verifyEmail/{token}")
+	public String verifyEmail(@PathVariable String token) {
+		return service.verifyEmail(token);
+	}
+	
+	@GetMapping("/processVerification/{email}")
+	public String sendEmailForVerification(@PathVariable String email) {
+		return service.emailVerificationToken(email);
+	}
 	
 }

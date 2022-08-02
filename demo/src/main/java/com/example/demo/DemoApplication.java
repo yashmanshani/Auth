@@ -74,7 +74,7 @@ public class DemoApplication {
 
 // JWT -> JSON Web token -> clone
 // header = {}
-// payload = {session id=11464, valid thru=12/15/2022, email=utalmighty@hacm.com} 
+// payload = {session id=11464, valid thru=12/15/2022, email=utalmighty@gmail.com} 
 // base64 => sadfjhfwbigbeijbvejbnefonefobndefiobjndefkefdkbjve
 // secret key => djgbdwgijobeijvvnsdgkjb
 // hash = (base64+secretkey) =>fahfbkjbkbqwff65ewfewfjnbewfijnwfogh387ref 
@@ -91,7 +91,8 @@ public class DemoApplication {
 // hash(encode64+secretkey) => fmnbgdsbgiwbgiwbgeiwgbdwigbwifgjbewifgbewiogb
 
 // APPLICATION FLOW
-// create- email, name ,password <verify>
+// create- email, name ,password <verify> -> base64({email: utalmail@gmail})+"."+hash({email: utalmail@gmail}+Secretkey)= > https://loaclhost:6969/verifyAccunt/hdfbdshbfdsuh37bfwdfbds
+// https://loaclhost:6969/verifyAccunt/dgjr348bdfhvbds . dhvbsdufg8tryr8vbhsvy
 // login - email/pass, session
 // update basic info -> session through
 // change password -> session through
@@ -99,6 +100,11 @@ public class DemoApplication {
 
 // RestTemplate -> to make rest calls on other services.
 
+// T-OTP - TIME based one time password- hash(secret key+"08:14") MS auth, g
+// forgotpass-> emailid --> {email:utal@g.com, validtill:8:30}->
+//dufgdjbni347kbcahscgaskcbasciaysvf.bfajchbeuicbacxcakxvsffegfycbdkdfsdfsw
 
+/// hash one way func hash(yash) => sfhg834riwfb
+// base64 base64(yash) => dfgbn4934 -> yash
 
 

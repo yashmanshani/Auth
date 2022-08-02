@@ -13,4 +13,6 @@ public interface AuthService {
 	public String changePasswordInDatabase(String email, String password);
 	public List<UserProfile> getAllUser();
 	public String forgotPassword(String email);
+	public String verifyEmail(String token);
+	public String emailVerificationToken(String email);
 }

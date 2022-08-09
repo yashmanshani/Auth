@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Huduks.UYAuth.DTO.ChangePasswordDTO;
 import com.Huduks.UYAuth.DTO.LoginCreds;
 import com.Huduks.UYAuth.DTO.UserProfile;
 import com.Huduks.UYAuth.Service.AuthService;
@@ -60,5 +61,27 @@ public class AuthController {
 	public String sendEmailForVerification(@PathVariable String email) {
 		return service.emailVerificationToken(email);
 	}
+	
+	@GetMapping("/forgetPassword/{email}")
+	public String forgetPassword(@PathVariable String email) {
+		return service.forgotPassword(email);
+	}
+	
+	@PostMapping("/verifyOTP")
+	public boolean verifyOTP(@RequestBody ChangePasswordDTO otpCreds) {
+		String email =  otpCreds.getEmail();
+		String otp = otpCreds.getOtp();
+		
+		return service.verifyOTP(email, otp);
+	}
+
+	@PostMapping("/verifyAndChangePassword")
+	public String verifyAndChangePassword(@RequestBody ChangePasswordDTO userCreds) {
+		String email =  userCreds.getEmail();
+		String password = userCreds.getPassword();
+		String otp = userCreds.getOtp();
+		return service.verifyAndChangePassword(email, password, otp);
+	}
+	
 	
 }

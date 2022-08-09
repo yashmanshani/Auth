@@ -12,11 +12,13 @@ import org.springframework.web.client.RestTemplate;
 
 import com.Huduks.UYAuth.DTO.AuthMailDTO;
 import com.Huduks.UYAuth.DTO.LoginCreds;
+import com.Huduks.UYAuth.DTO.OTPDTO;
 import com.Huduks.UYAuth.DTO.UserProfile;
 import com.Huduks.UYAuth.DTO.VerifyEmailHeader;
 import com.Huduks.UYAuth.DTO.VerifyEmailPayload;
 import com.Huduks.UYAuth.Repository.AuthRepository;
 import com.Huduks.UYAuth.Utility.HashUtility;
+import com.Huduks.UYAuth.Utility.OTPUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,9 +35,15 @@ public class AuthServiceImpl implements AuthService{
 	@Autowired
 	HashUtility hash;
 	
+	@Autowired
+	OTPUtility otp;
+	
+	String mailerUrl = "http://localhost:6971/mailer/v1/sendEmail";
+	
 	
 	private int expiryMinutes = 10;
 	ZoneId zone = ZoneId.of("Asia/Kolkata");
+	
 
 	@Override
 	public String addUser(UserProfile user) {
@@ -90,19 +98,66 @@ public class AuthServiceImpl implements AuthService{
 	}
 
 	@Override
-	public String forgotPassword(String email) {
-		// TODO Auto-generated method stub
-		
-		// email -> mail (OTP)
-		// email->otp -> then he should call other endpoint usme email/otp 
-		return null;
-	}
-
-	@Override
 	public List<UserProfile> getAllUser() {
 		return (List<UserProfile>) repo.findAll();
 	}
 
+	
+	// Forgot password
+	@Override
+	public String forgotPassword(String email) {
+		Optional<UserProfile> opt = repo.findUserProfileByEmail(email);
+		if (opt.isEmpty()) {
+			return "User does not exist";
+		}
+		
+		UserProfile user = opt.get();
+		String password = user.getPassword();
+		
+		String key = email+password;
+		
+		OTPDTO otpDto = otp.getOTP(key);
+		
+		String body = "OTP for Forgot Password is: "+otpDto.getOtp()+ " \n This is Valid for next "+ otpDto.getValidtill() + " minutes.";
+		AuthMailDTO mailDto = new AuthMailDTO();
+		mailDto.setEmail(email);
+		mailDto.setBody(body);
+		mailDto.setSubject("HUDUK Auth Forgot Password ");
+		
+		
+		boolean mailStatus = template.postForObject(mailerUrl, mailDto, Boolean.class);
+		if(mailStatus == true) {
+			return "Mail sent successfully";
+		}
+		else {
+			return "Mail not sent";
+		}
+	}
+	
+	@Override
+	public boolean verifyOTP(String email, String otpString) {
+		Optional<UserProfile> opt = repo.findUserProfileByEmail(email);
+		if (opt.isEmpty()) {
+			return false;
+		}
+		
+		UserProfile user = opt.get();
+		String password = user.getPassword();
+		
+		String key = email+password;
+		
+		return otp.verifyOtp(key, otpString);
+	}
+
+	@Override
+	public String verifyAndChangePassword(String email, String password, String otp) {
+		if(verifyOTP(email, otp)) {
+			changePasswordInDatabase(email, password);
+			return "Password Changed Successfully";
+		}
+		return "Password change unsuccessful";
+	}
+	
 	@Override
 	public String changePasswordInDatabase(String email, String password) {
 		Optional<UserProfile> opt = repo.findUserProfileByEmail(email);
@@ -116,6 +171,8 @@ public class AuthServiceImpl implements AuthService{
 		return "Password Changed Successfully";
 	}
 	
+	
+	// Email verification
 	@Override
 	public String verifyEmail(String token) {
 		// token = base64(data)hash(data+secret)
@@ -174,8 +231,7 @@ public class AuthServiceImpl implements AuthService{
 		mailDto.setBody(link + "\n This verification code is valid till 10 Minutes.");
 		mailDto.setSubject("HUDUK Auth verification Mail");
 		
-		String mailerUrl = "http://localhost:6971/mailer/v1/sendEmail";
-		boolean mailStatus = template.postForObject(mailerUrl, mailDto, Boolean.class);
+		boolean mailStatus = template.postForObject(mailerUrl, mailDto, Boolean.class); // 
 		if(mailStatus == true) {
 			return "Mail sent successfully";
 		}

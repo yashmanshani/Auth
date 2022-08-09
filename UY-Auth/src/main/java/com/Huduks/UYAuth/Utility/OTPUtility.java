@@ -19,15 +19,18 @@ public class OTPUtility {
 	public OTPUtility(int timeRoundOff, int otpLength) {
 		if (timeRoundOff <= 0)
 			this.timeRoundOff = 5;
-		this.timeRoundOff = timeRoundOff;
+		else
+			this.timeRoundOff = timeRoundOff;
 		if (otpLength<=0) 
 			this.otpLength = 8;
-		this.otpLength = otpLength;
+		else
+			this.otpLength = otpLength;
 	}
 	
 	public OTPDTO getOTP(String message) {
 		LocalDateTime time = LocalDateTime.now();
-		String otp = generateOTP(message+time);
+		String timeRange = getRoundOffTime(time, timeRoundOff);
+		String otp = generateOTP(message+timeRange);
 		int valid = timeRoundOff+((timeRoundOff-(time.getMinute()%timeRoundOff))-1);
 		OTPDTO dto = new OTPDTO();
 		dto.setOtp(otp);

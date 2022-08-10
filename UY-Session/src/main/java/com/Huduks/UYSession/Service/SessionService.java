@@ -5,5 +5,6 @@ import com.Huduks.UYSession.DTO.NewSession;
 public interface SessionService {
 
 	public String getToken(NewSession data);
-	public String verifyToken(String token);
+	public boolean verifyToken(String token);
+	public String getEmailFromToken(String token);
 }

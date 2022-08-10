@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Huduks.UYAuth.DTO.ChangePasswordDTO;
 import com.Huduks.UYAuth.DTO.LoginCreds;
+import com.Huduks.UYAuth.DTO.UserDTO;
 import com.Huduks.UYAuth.DTO.UserProfile;
 import com.Huduks.UYAuth.Service.AuthService;
 
@@ -45,11 +46,8 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public String loginUser(@RequestBody LoginCreds creds) {
-		if(service.authenticateUser(creds)) {
-			return "User logged In";
-		}
-		return "Invalid Credentials";
+	public UserDTO loginUser(@RequestBody LoginCreds creds) {
+		return service.authenticateUser(creds);
 	}
 	
 	@GetMapping("/verifyEmail/{token}")
@@ -82,6 +80,5 @@ public class AuthController {
 		String otp = userCreds.getOtp();
 		return service.verifyAndChangePassword(email, password, otp);
 	}
-	
-	
+
 }

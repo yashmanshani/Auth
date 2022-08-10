@@ -3,13 +3,17 @@ package com.Huduks.UYAuth.Service;
 import java.util.List;
 
 import com.Huduks.UYAuth.DTO.LoginCreds;
+import com.Huduks.UYAuth.DTO.UserDTO;
 import com.Huduks.UYAuth.DTO.UserProfile;
 
 public interface AuthService {
 	
 	public String addUser(UserProfile user);
 	public String updateUser(UserProfile user); //password
-	public boolean authenticateUser(LoginCreds creds); // take hashed password
+	
+	public UserDTO authenticateUser(LoginCreds creds);
+	public boolean authenticateUserViaEmailPassword(String email, String password); // take hashed password
+	public boolean authenticateUserViaSession(String token);
 	
 	public String changePasswordInDatabase(String email, String password);
 	public List<UserProfile> getAllUser();

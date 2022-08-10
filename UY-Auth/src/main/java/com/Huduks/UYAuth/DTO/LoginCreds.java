@@ -3,6 +3,14 @@ package com.Huduks.UYAuth.DTO;
 public class LoginCreds {
 	private String email;
 	private String password;
+	private String token;
+	
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -17,7 +25,7 @@ public class LoginCreds {
 	}
 	@Override
 	public String toString() {
-		return "LoginCreds [email=" + email + ", password=" + password + "]";
+		return "LoginCreds [email=" + email + ", password=" + password + ", token=" + token + "]";
 	}
 	
 }

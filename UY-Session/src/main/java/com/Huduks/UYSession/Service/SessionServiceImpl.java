@@ -46,7 +46,7 @@ public class SessionServiceImpl implements SessionService{
 	}
 	
 	@Override
-	public String verifyToken(String token) {
+	public boolean verifyToken(String token) {
 		if(util.verifySignature(token)) { 
 			// No tampering
 			String payload = util.getPayload(token);
@@ -58,7 +58,7 @@ public class SessionServiceImpl implements SessionService{
 				Payload obj = mapper.readValue(payload, Payload.class);
 				long epoch = obj.getValidThru();
 				if(LocalDate.ofEpochDay(epoch).isAfter(current)) {
-					return "Session Valid";
+					return true;
 				}
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
@@ -66,7 +66,22 @@ public class SessionServiceImpl implements SessionService{
 			}
 			
 		}
-		return "Session Expired";
+		return false;
 	}
+
+	@Override
+	public String getEmailFromToken(String token) {
+		String payload = util.getPayload(token);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			Payload obj = mapper.readValue(payload, Payload.class);
+			return obj.getEmail();
+		}
+		catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
 
 }

@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.Huduks.UYAuth.DTO.AuthMailDTO;
+import com.Huduks.UYAuth.DTO.EmailDTO;
 import com.Huduks.UYAuth.DTO.LoginCreds;
+import com.Huduks.UYAuth.DTO.NewSession;
 import com.Huduks.UYAuth.DTO.OTPDTO;
+import com.Huduks.UYAuth.DTO.TokenDTO;
+import com.Huduks.UYAuth.DTO.UserDTO;
 import com.Huduks.UYAuth.DTO.UserProfile;
 import com.Huduks.UYAuth.DTO.VerifyEmailHeader;
 import com.Huduks.UYAuth.DTO.VerifyEmailPayload;
@@ -38,7 +42,9 @@ public class AuthServiceImpl implements AuthService{
 	@Autowired
 	OTPUtility otp;
 	
+	int sessionForDays = 5;
 	String mailerUrl = "http://localhost:6971/mailer/v1/sendEmail";
+	String sessionUrl = "http://localhost:6970/session/v1";
 	
 	
 	private int expiryMinutes = 10;
@@ -82,11 +88,65 @@ public class AuthServiceImpl implements AuthService{
 //		return "User Updated Successfully";
 		return null;
 	}
-
+	
 	@Override
-	public boolean authenticateUser(LoginCreds creds) {
+	public List<UserProfile> getAllUser() {
+		return (List<UserProfile>) repo.findAll();
+	}
+	
+	public UserDTO getUserProfile(String email) {
+		Optional<UserProfile> opt = repo.findUserProfileByEmail(email);
+		if(opt.isEmpty()) {
+			return null;
+		}
+		UserProfile user = opt.get();
+		UserDTO dto = new UserDTO();
+		dto.setEmail(user.getEmail());
+		dto.setName(user.getName());
+		return dto;
+	}
+	
+	// Authenticating User
+	
+	@Override
+	public UserDTO authenticateUser(LoginCreds creds) {
+		//{email:"", pass: "", token: "dgfjebvierbverbgieorbge.rghehrhthrthh.sffewfewfwf"}
+		String token = creds.getToken();
+		
+		if (!token.isBlank()) {
+			if (authenticateUserViaSession(token)) {
+				String getEmailUrl = sessionUrl+"/getEmail";
+				TokenDTO tokenDTO = new TokenDTO();
+				tokenDTO.setToken(token);
+				EmailDTO response = template.postForObject(getEmailUrl, tokenDTO, EmailDTO.class);
+				String email = response.getEmail();
+				UserDTO dto = getUserProfile(email);
+				dto.setToken(token);
+				return dto;
+			}
+		}
+		
 		String email = creds.getEmail();
 		String password = creds.getPassword();
+		if (!email.isBlank() && !password.isBlank()) {
+			if(authenticateUserViaEmailPassword(email, password)) {
+				String newSessionUrl = sessionUrl+"/create";
+				NewSession sessionObj = new NewSession();
+				sessionObj.setEmail(email);
+				sessionObj.setDeviceId("DEFAULT"); // TODO: Change later
+				sessionObj.setDays(sessionForDays);
+				TokenDTO tokenDTO =  template.postForObject(newSessionUrl, sessionObj, TokenDTO.class);
+				String newToken = tokenDTO.getToken();
+				UserDTO dto = getUserProfile(email);
+				dto.setToken(newToken);
+				return dto;
+			}
+		}
+		return new UserDTO();
+	}
+
+	@Override
+	public boolean authenticateUserViaEmailPassword(String email, String password) {
 		
 		Optional<UserProfile> opt = repo.findUserProfileByEmail(email);
 		
@@ -96,10 +156,14 @@ public class AuthServiceImpl implements AuthService{
 		UserProfile temp = opt.get();
 		return password.equals(temp.getPassword());
 	}
-
+	
 	@Override
-	public List<UserProfile> getAllUser() {
-		return (List<UserProfile>) repo.findAll();
+	public boolean authenticateUserViaSession(String token) {
+		String validateUrl = sessionUrl+"/session"; //=> http://localhost:6970/session/v1/session
+		TokenDTO tokenDTO = new TokenDTO();
+		tokenDTO.setToken(token);
+		boolean response = template.postForObject(validateUrl, tokenDTO, Boolean.class);
+		return response;
 	}
 
 	

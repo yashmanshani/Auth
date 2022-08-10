@@ -11,3 +11,4 @@ public class UyAuthApplication {
 	}
 
 }
+ // LOGIN -> ID/password -> token, Sessions(token)

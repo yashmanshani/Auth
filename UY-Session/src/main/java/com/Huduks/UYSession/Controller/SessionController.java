@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Huduks.UYSession.DTO.EmailDto;
 import com.Huduks.UYSession.DTO.NewSession;
 import com.Huduks.UYSession.DTO.TokenDTO;
 import com.Huduks.UYSession.Service.SessionService;
 
 @RestController
 @RequestMapping("session/v1")
-public class ServiceController {
+public class SessionController {
 	
 	@Autowired
 	SessionService service;
@@ -32,14 +33,19 @@ public class ServiceController {
 	}
 	
 	@PostMapping("/session")
-	public String validateSession(@RequestBody TokenDTO tokenDto) {
+	public boolean validateSession(@RequestBody TokenDTO tokenDto) {
 		String token = tokenDto.getToken();
 		return service.verifyToken(token);
 	}
 	
+	@PostMapping("/getEmail")
+	public EmailDto getEmailFromSession(@RequestBody TokenDTO tokenDto) {
+		String email = service.getEmailFromToken(tokenDto.getToken());
+		EmailDto dto = new EmailDto();
+		dto.setEmail(email);
+		return dto;
+	}
 
 }
 
-// 31 july -> JWT valid thru(30 AUg), isuuedon(31 july) 15 july 16july
-// paschangedon 1aug
-
+// 

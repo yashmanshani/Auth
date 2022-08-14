@@ -36,7 +36,7 @@ public class AuthController {
 	}
 	
 	@PutMapping("/user")
-	public String updateUser(@RequestBody UserProfile user) {
+	public String updateUser(@RequestBody UserDTO user) {
 		return service.updateUser(user);
 	}
 	

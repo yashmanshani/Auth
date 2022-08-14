@@ -1,11 +1,17 @@
 package com.Huduks.UYAuth.DTO;
 
-import javax.persistence.Column;
-
 public class UserDTO {
 	private String name;
 	private String email;
 	private String token;
+	private String message;
+	
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	public String getName() {
 		return name;
 	}

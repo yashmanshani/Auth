@@ -47,10 +47,11 @@ public class AuthServiceImpl implements AuthService{
 	String sessionUrl = "http://localhost:6970/session/v1";
 	
 	
+	
 	private int expiryMinutes = 10;
 	ZoneId zone = ZoneId.of("Asia/Kolkata");
 	
-
+	
 	@Override
 	public String addUser(UserProfile user) {
 		// Saves the data in the database.
@@ -71,22 +72,41 @@ public class AuthServiceImpl implements AuthService{
 	}
 
 	@Override
-	public String updateUser(UserProfile user) {
-		//one valnernability --> 
-//		String email = user.getEmail();
-//		UserProfile temp = repo.findUserProfileByEmail(email);
-//		if (temp == null) {
-//			return "No such user with email "+email;
-//		}
-//		if (temp.isVerified() == false) {
-//			return "User verfication Pending";
-//		}
-//		user.setUserId(temp.getUserId());
-//		user.setPassword(temp.getPassword());
-//		user.setVerified(temp.isVerified());
-//		repo.save(user);
-//		return "User Updated Successfully";
-		return null;
+	public String updateUser(UserDTO user) {
+		String email = user.getEmail();
+		String token = user.getToken();
+		String name = user.getName();
+		if(email == null || email.isBlank()) {
+			return "Email ID can not be empty";
+		}
+		if(name == null || name.isBlank()) {
+			return "Name can not be empty";
+		}
+		
+		if(authenticateUserViaSession(token)) {
+			String getEmailUrl = sessionUrl+"/getEmail";
+			TokenDTO tokenDTO = new TokenDTO();
+			tokenDTO.setToken(token);
+			EmailDTO response = template.postForObject(getEmailUrl, tokenDTO, EmailDTO.class);
+			String tokenEmail = response.getEmail();
+			if(tokenEmail.equals(email)) {
+				Optional<UserProfile> opt = repo.findUserProfileByEmail(email);
+				
+				if (opt.isEmpty()) {
+					return "No such user with email "+email;
+				}
+				UserProfile temp = opt.get();
+				if (temp.isVerified() == false) {
+					return "User verfication Pending";
+				}
+				temp.setName(name);
+				repo.save(temp);
+				return "User Updated Successfully";
+			}
+		}
+		return "Session Invalid/Expired";
+		
+		
 	}
 	
 	@Override
@@ -94,59 +114,71 @@ public class AuthServiceImpl implements AuthService{
 		return (List<UserProfile>) repo.findAll();
 	}
 	
-	public UserDTO getUserProfile(String email) {
+	public UserDTO getUserProfile(String email, String token) {
 		Optional<UserProfile> opt = repo.findUserProfileByEmail(email);
 		if(opt.isEmpty()) {
 			return null;
 		}
 		UserProfile user = opt.get();
 		UserDTO dto = new UserDTO();
-		dto.setEmail(user.getEmail());
-		dto.setName(user.getName());
+		if(user.isVerified()) {
+			dto.setEmail(user.getEmail());
+			dto.setName(user.getName());
+			dto.setToken(token);
+			dto.setMessage("Login successful");
+			return dto;
+		}
+		dto.setMessage("User Not Verified");
 		return dto;
 	}
 	
-	// Authenticating User
 	
+	// Authenticating User/Login
 	@Override
 	public UserDTO authenticateUser(LoginCreds creds) {
 		//{email:"", pass: "", token: "dgfjebvierbverbgieorbge.rghehrhthrthh.sffewfewfwf"}
 		String token = creds.getToken();
 		
-		if (!token.isBlank()) {
-			if (authenticateUserViaSession(token)) {
+		if (token != null && !token.isBlank() && authenticateUserViaSession(token)) {
 				String getEmailUrl = sessionUrl+"/getEmail";
 				TokenDTO tokenDTO = new TokenDTO();
 				tokenDTO.setToken(token);
 				EmailDTO response = template.postForObject(getEmailUrl, tokenDTO, EmailDTO.class);
 				String email = response.getEmail();
-				UserDTO dto = getUserProfile(email);
-				dto.setToken(token);
+				UserDTO dto = getUserProfile(email, token);
+				return dto;
+		}
+		else {
+			String email = creds.getEmail();
+			String password = creds.getPassword();
+			if (email != null && password != null && !email.isBlank() && !password.isBlank()) {
+				if(authenticateUserViaEmailPassword(email, password)) {
+					String newSessionUrl = sessionUrl+"/create";
+					NewSession sessionObj = new NewSession();
+					sessionObj.setEmail(email);
+					sessionObj.setDeviceId("DEFAULT"); // TODO: Change later
+					sessionObj.setDays(sessionForDays);
+					TokenDTO tokenDTO =  template.postForObject(newSessionUrl, sessionObj, TokenDTO.class);
+					String newToken = tokenDTO.getToken();
+					UserDTO dto = getUserProfile(email, newToken);
+					System.out.println("here");
+					return dto;
+				}
+				else {
+					UserDTO dto = new UserDTO();
+					dto.setMessage("Invalid Credentials");
+					return dto;
+				}
+			}
+			else {
+				UserDTO dto = new UserDTO();
+				dto.setMessage("Session Invalid/Expired");
 				return dto;
 			}
 		}
-		
-		String email = creds.getEmail();
-		String password = creds.getPassword();
-		if (!email.isBlank() && !password.isBlank()) {
-			if(authenticateUserViaEmailPassword(email, password)) {
-				String newSessionUrl = sessionUrl+"/create";
-				NewSession sessionObj = new NewSession();
-				sessionObj.setEmail(email);
-				sessionObj.setDeviceId("DEFAULT"); // TODO: Change later
-				sessionObj.setDays(sessionForDays);
-				TokenDTO tokenDTO =  template.postForObject(newSessionUrl, sessionObj, TokenDTO.class);
-				String newToken = tokenDTO.getToken();
-				UserDTO dto = getUserProfile(email);
-				dto.setToken(newToken);
-				return dto;
-			}
-		}
-		return new UserDTO();
 	}
 
-	@Override
-	public boolean authenticateUserViaEmailPassword(String email, String password) {
+	private boolean authenticateUserViaEmailPassword(String email, String password) {
 		
 		Optional<UserProfile> opt = repo.findUserProfileByEmail(email);
 		
@@ -157,8 +189,7 @@ public class AuthServiceImpl implements AuthService{
 		return password.equals(temp.getPassword());
 	}
 	
-	@Override
-	public boolean authenticateUserViaSession(String token) {
+	private boolean authenticateUserViaSession(String token) {
 		String validateUrl = sessionUrl+"/session"; //=> http://localhost:6970/session/v1/session
 		TokenDTO tokenDTO = new TokenDTO();
 		tokenDTO.setToken(token);
@@ -176,6 +207,9 @@ public class AuthServiceImpl implements AuthService{
 		}
 		
 		UserProfile user = opt.get();
+		if(!user.isVerified()) {
+			return "User not verified";
+		}
 		String password = user.getPassword();
 		
 		String key = email+password;
@@ -206,6 +240,11 @@ public class AuthServiceImpl implements AuthService{
 		}
 		
 		UserProfile user = opt.get();
+		
+		if(!user.isVerified()) {
+			return false;
+		}
+		
 		String password = user.getPassword();
 		
 		String key = email+password;

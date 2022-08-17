@@ -1,3 +1,3 @@
 ## UY-Auth
 
-RESTful API User Authentication software.
+RESTful API User Authentication.

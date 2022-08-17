@@ -42,12 +42,14 @@ public class AuthServiceImpl implements AuthService{
 	@Autowired
 	OTPUtility otp;
 	
+	int saltLength = 8;
 	int sessionForDays = 5;
 	String mailerUrl = "http://localhost:6971/mailer/v1/sendEmail";
 	String sessionUrl = "http://localhost:6970/session/v1";
 	
-	
-	
+	// database password storage format hashSHA256 (password+salt)
+	// hello -> hash(hello+dgjb5f2w) -> hfvdsfhdsjfkbdsgbs
+	// hello -> hash(hello+dgjb5f2w) -> hfvdsfhdsjfkbdsgbs
 	private int expiryMinutes = 10;
 	ZoneId zone = ZoneId.of("Asia/Kolkata");
 	
@@ -58,7 +60,10 @@ public class AuthServiceImpl implements AuthService{
 		try {
 			user.setUserId(null);
 			user.setVerified(false);
-			user.setSalt(null); // TODO: changes required
+			String salt = hash.generateSalt(saltLength);
+			user.setSalt(salt);
+			String password = user.getPassword();
+			user.setPassword(hash.digestSHA256(password+salt));
 			repo.save(user);
 			emailVerificationToken(user.getEmail());
 			return "User Added Successfully";
@@ -161,7 +166,6 @@ public class AuthServiceImpl implements AuthService{
 					TokenDTO tokenDTO =  template.postForObject(newSessionUrl, sessionObj, TokenDTO.class);
 					String newToken = tokenDTO.getToken();
 					UserDTO dto = getUserProfile(email, newToken);
-					System.out.println("here");
 					return dto;
 				}
 				else {
@@ -186,7 +190,9 @@ public class AuthServiceImpl implements AuthService{
 			return false;
 		}
 		UserProfile temp = opt.get();
-		return password.equals(temp.getPassword());
+		
+		String hashedPassword = hash.digestSHA256(password+temp.getSalt());
+		return hashedPassword.equals(temp.getPassword());
 	}
 	
 	private boolean authenticateUserViaSession(String token) {
@@ -268,7 +274,8 @@ public class AuthServiceImpl implements AuthService{
 			return "Invalid Email";
 		}
 		UserProfile temp = opt.get();
-		temp.setPassword(password);
+		String hashedPassword = hash.digestSHA256(password+temp.getSalt());
+		temp.setPassword(hashedPassword);
 		repo.save(temp);
 		// End all sessions 
 		return "Password Changed Successfully";

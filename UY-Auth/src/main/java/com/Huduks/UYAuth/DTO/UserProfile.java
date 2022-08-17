@@ -1,10 +1,7 @@
 package com.Huduks.UYAuth.DTO;
 
-import java.util.Random;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -79,20 +76,6 @@ public class UserProfile {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	
-	public String generateSalt(int length) {
-		String alphaNumeric = "abcdefghijklmnopqrstuvwxyz"
-							+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-							+ "0123456789";
-		int len = alphaNumeric.length();
-		StringBuilder sb = new StringBuilder();
-		Random rand = new Random();
-		for (int i=0; i<length; i++) {
-			char randomChar = alphaNumeric.charAt(rand.nextInt(len));
-			sb.append(randomChar);
-		}
-		return sb.toString();
 	}
 
 	@Override

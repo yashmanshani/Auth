@@ -107,4 +107,11 @@ public class DemoApplication {
 /// hash one way func hash(yash) => sfhg834riwfb
 // base64 base64(yash) => dfgbn4934 -> yash
 
+// hash(yash mannshani) => ggkgbegkr
+// SHA -> hashing algo Simple hashing algo
+
+// JWT -> JSON Web tokens //
+// header {info} payload -> {name: yash, email: yashmanshani}
+
+// first point of failure 
 

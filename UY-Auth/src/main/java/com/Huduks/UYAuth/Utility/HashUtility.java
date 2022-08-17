@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Random;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 
@@ -23,7 +24,7 @@ public class HashUtility {
 		return token;
 	}
 
-	private String digestSHA256(String message) {
+	public String digestSHA256(String message) {
 		String signature="";
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -85,6 +86,20 @@ public class HashUtility {
 		String[] tokenParts = token.split("\\.");
 		String receivedPayload = tokenParts[1];
 		return decodeBase64(receivedPayload);
+	}
+	
+	public String generateSalt(int length) {
+		String alphaNumeric = "abcdefghijklmnopqrstuvwxyz"
+							+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+							+ "0123456789";
+		int len = alphaNumeric.length();
+		StringBuilder sb = new StringBuilder();
+		Random rand = new Random();
+		for (int i=0; i<length; i++) {
+			char randomChar = alphaNumeric.charAt(rand.nextInt(len));
+			sb.append(randomChar);
+		}
+		return sb.toString();
 	}
 
 }
